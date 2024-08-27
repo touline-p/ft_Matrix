@@ -1,10 +1,10 @@
 pub mod arithmetic;
 pub mod basic;
-pub mod field;
+pub mod traits;
 pub mod format;
 pub mod iterator;
 
-use field::Field;
+use traits::Field;
 
 #[derive(PartialEq)]
 pub struct Vector<K, const SIZE: usize> {
