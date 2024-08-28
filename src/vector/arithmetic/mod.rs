@@ -4,6 +4,7 @@ pub mod traits;
 pub mod dot_product;
 pub mod norm;
 pub mod cosine;
+pub mod cross_product;
 
 use crate::vector::{Vector, Field};
 
