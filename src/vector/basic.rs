@@ -1,4 +1,5 @@
 use super::{Field, Vector};
+use std::ops::Index;
 
 impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
     pub fn new() -> Self {
@@ -15,6 +16,13 @@ impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
 impl<K: Field, const SIZE: usize> From<[K; SIZE]> for Vector<K, SIZE> {
     fn from(data: [K; SIZE]) -> Self {
         Vector {data}
+    }
+}
+
+impl<K, const SIZE: usize> Index<usize> for Vector<K, SIZE> {
+    type Output = K;
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.data[index]
     }
 }
 
