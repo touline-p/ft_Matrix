@@ -21,8 +21,8 @@ impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
                 }
             )
     }
-    pub fn norm(&self) -> f32
-        where K: Into<f32>
+    pub fn norm(&self) -> f64
+        where K: Into<f64>
     {
         self.iter().fold(K::default(), |acc, x| {acc + *x * *x}).into().sqrt()
     }
@@ -43,14 +43,14 @@ mod test {
     fn positiv_vec() {
         let u = Vector::from([1., 2., 3.]);
         assert_eq!(u.norm_1(), 6.0);
-        assert_eq!(u.norm(), 3.7416575);
+        assert_eq!(u.norm(), 3.7416573867739414);
         assert_eq!(u.norm_inf(), 3.0);
     }
     #[test]
     fn negativ_vec() {
         let u = Vector::from([-1., -2.]);
         assert_eq!(u.norm_1(), 3.0);
-        assert_eq!(u.norm(), 2.236067977);
+        assert_eq!(u.norm(), 2.23606797749979);
         assert_eq!(u.norm_inf(), 2.0);
     }
 }
