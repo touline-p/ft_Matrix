@@ -1,11 +1,9 @@
 pub mod linear_combination;
 pub mod lerp;
-pub mod add;
-pub mod sub;
-pub mod mul;
+pub mod traits;
+pub mod dot_product;
 
-use super::Vector;
-use super::traits::Field;
+use crate::vector::{Vector, Field};
 
 impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
     pub fn add(&self, v: &Vector<K, SIZE>) -> Self {
@@ -42,6 +40,7 @@ mod test {
         assert_eq!(a.add(&b), [0,2,4].into());
         a.add_assign(&b);
         assert_eq!(a, [0,2,4].into());
+        assert_eq!(a + b, [0,3,6].into());
     }
 
     #[test]
@@ -51,12 +50,14 @@ mod test {
         assert_eq!(a.sub(&b), [0,0,0].into());
         a.sub_assign(&b);
         assert_eq!(a, [0,0,0].into());
+        assert_eq!(a - b, [0, -1, -2].into())
     }
 
     #[test]
     fn scl_vector() {
         let mut a = Vector::from([0,1,2]);
         assert_eq!(a.scl(3), [0,3,6].into());
+        assert_eq!(&a * 3, [0,3,6].into());
         a.scl_assign(&3);
         assert_eq!(a, [0,3,6].into());
     }
