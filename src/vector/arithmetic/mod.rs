@@ -2,6 +2,7 @@ pub mod linear_combination;
 pub mod lerp;
 pub mod traits;
 pub mod dot_product;
+pub mod norm;
 
 use crate::vector::{Vector, Field};
 
