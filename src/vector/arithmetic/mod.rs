@@ -3,6 +3,7 @@ pub mod lerp;
 pub mod traits;
 pub mod dot_product;
 pub mod norm;
+pub mod cosine;
 
 use crate::vector::{Vector, Field};
 
