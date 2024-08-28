@@ -16,10 +16,35 @@ macro_rules! impl_field {
     };
 }
 
-impl_field!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
-
-pub trait Scalar<T: Field>: Sized {
-    fn multiplier(&self, other: T) -> T;
+macro_rules! impl_abs_unchanged {
+    ($($type:ident),*) => {
+        $(impl Abs for $type {
+            fn abs(self) -> Self {
+                self
+            }
+        })*
+    };
 }
 
+macro_rules! impl_abs {
+    ($($type:ident),*) => {
+        $(impl Abs for $type {
+            fn abs(self) -> Self {
+                if self > Self::default() {
+                    self
+                } else {
+                    -self
+                }
+            }
+        })*
+    };
+}
 
+impl_field!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
+impl_abs!(i8, i16, i32, i64, f32, f64);
+impl_abs_unchanged!(u8, u16, u32, u64);
+
+pub trait Abs: PartialOrd + Default
+{
+    fn abs(self) -> Self;
+}
