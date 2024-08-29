@@ -1,11 +1,12 @@
 use super::{Vector, Field};
-use crate::vector::traits::Abs;
+use crate::traits::Abs;
 
 impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
     pub fn norm_1(&self) -> K
         where K: PartialOrd + Abs {
         self.iter().fold(K::default(), |acc, x| acc + x.abs())
     }
+
     pub fn norm_inf(&self) -> K
         where K: PartialOrd + Abs {
         self.iter()
@@ -21,6 +22,7 @@ impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
                 }
             )
     }
+
     pub fn norm(&self) -> f64
         where K: Into<f64>
     {

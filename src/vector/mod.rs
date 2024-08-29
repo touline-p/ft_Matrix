@@ -1,12 +1,11 @@
-pub mod arithmetic;
 pub mod basic;
-pub mod traits;
 pub mod format;
 pub mod iterator;
+pub mod ops;
 
-use traits::Field;
+use super::Field;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Copy, Clone)]
 pub struct Vector<K, const SIZE: usize> {
     data: [K; SIZE],
 }

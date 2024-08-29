@@ -34,7 +34,6 @@ impl<K, const SIZE: usize> FromIterator<K> for Vector<K, SIZE> {
         Vector {
             data: std::array::from_fn(|_| iterator.next().unwrap()),
         }
-
     }
 }
 

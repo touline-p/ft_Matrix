@@ -1,4 +1,4 @@
-use crate::vector::{Vector, traits::Field};
+use crate::{vector::Vector, traits::Field};
 use std::ops::{Sub, SubAssign};
 
 impl<K: Field, const SIZE: usize> Sub for Vector<K, SIZE> {
@@ -18,5 +18,3 @@ impl<K: Field, const SIZE: usize> SubAssign for Vector<K, SIZE> {
         self.iter_mut().zip(rhs).for_each(|(x, y)| *x -= y);
     }
 }
-
-

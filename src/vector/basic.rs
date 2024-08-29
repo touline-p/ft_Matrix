@@ -3,13 +3,17 @@ use std::ops::Index;
 
 impl<K: Field, const SIZE: usize> Vector<K, SIZE> {
     pub fn new() -> Self {
-        Vector {
-            data: [K::default(); SIZE],
-        }
+        Vector::default()
     }
 
     pub fn size(&self) -> usize {
         SIZE
+    }
+}
+
+impl<K: Field, const SIZE: usize> Default for Vector<K, SIZE> {
+    fn default() -> Self {
+        [K::default(); SIZE].into()
     }
 }
 

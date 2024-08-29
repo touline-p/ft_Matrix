@@ -1,4 +1,4 @@
-use crate::vector::{Vector, traits::Field};
+use crate::{vector::Vector, traits::Field};
 use std::ops::{Mul, MulAssign};
 
 impl<K: Field, const SIZE: usize> Mul<K> for Vector<K, SIZE> {

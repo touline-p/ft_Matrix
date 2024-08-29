@@ -44,7 +44,6 @@ impl_field!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
 impl_abs!(i8, i16, i32, i64, f32, f64);
 impl_abs_unchanged!(u8, u16, u32, u64);
 
-pub trait Abs: PartialOrd + Default
-{
+pub trait Abs: PartialOrd + Default {
     fn abs(self) -> Self;
 }
