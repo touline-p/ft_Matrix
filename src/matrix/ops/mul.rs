@@ -26,18 +26,10 @@ impl<K: Field + Display + std::fmt::Debug, const X: usize, const Y: usize> Mul<M
     type Output = Self;
 
     fn mul(self, rhs: Matrix<K,Y,X>) -> Self::Output {
-        //self.iter().map(
-            //|row|
-            //row.iter().enumerate()
-//
-//
-        //).collect()
-        println!("first:\n{self:?}\nrhs:\n{rhs:?}");
-
         self.iter().map(
             |row|
             (0..X).map(|index| row.iter().zip(rhs.matrix_col_iter(index))
-            .fold(K::default(), |acc, (x, y)| {println!("{x}, {y}\n");acc + *x * *y})).collect::<Vector<K, X>>()
+            .fold(K::default(), |acc, (x, y)| {acc + *x * *y})).collect::<Vector<K, X>>()
         ).collect()
 
     }

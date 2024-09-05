@@ -1,0 +1,26 @@
+
+running 27 tests
+test matrix::basic::test::transpose ... ok
+test matrix::basic::test::trace_matrix ... ok
+test function::test::linear_combination_basic ... ok
+test matrix::inverse::test::test_identity ... ok
+test function::test::lerp_basic ... ok
+test matrix::ops::mul::test::mul_matrix_times_matrix ... ok
+test matrix::inverse::test::test_inverse_of_complex_matrix ... ok
+test vector::basic::test::new_default ... ok
+test matrix::inverse::test::test_inverse_of_id_is_id ... ok
+test vector::basic::test::size_return_size ... ok
+test vector::ops::cosine::test::test_from_subject ... ok
+test vector::ops::cosine::test::vector_angle_droit ... ok
+test vector::basic::test::pivot ... ok
+test vector::ops::cosine::test::vector_angle_plat ... ok
+test vector::iterator::test::iterate_on_default_vector ... ok
+test vector::ops::cross::test::test ... ok
+test vector::ops::dot_product::tests::test_dot_product_different_length_vectors ... ok
+test vector::ops::dot_product::tests::test_dot_product_empty_vectors ... ok
+test vector::ops::dot_product::tests::test_dot_product_floating_point_numbers ... ok
+test vector::ops::dot_product::tests::test_dot_product_equal_length_vectors ... ok
+test vector::ops::dot_product::tests::test_dot_product_negative_numbers ... ok
+test vector::ops::norm::test::negativ_vec ... ok
+test vector::ops::norm::test::vector_null ... ok
+test vector::ops::norm::test::positiv_vec ... ok
