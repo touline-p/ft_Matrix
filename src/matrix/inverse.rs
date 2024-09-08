@@ -1,68 +1,40 @@
 use crate::traits::Unity;
 
-use super::{Matrix, Field, Vector, MatrixResult};
+use super::{Matrix, Field, MatrixResult};
 
 impl<K, const X: usize> Matrix::<K, X, X>
     where K: Unity + PartialEq + Default + Field {
-    pub fn inverse(&self) -> MatrixResult<Matrix<K, X, X>> {
-        let mut dest_matrix: Matrix<K, X, X> = Matrix::identity();
-        let mut copy = self.clone();
+    pub fn inverse(mut self) -> MatrixResult<Matrix<K, X, X>> {
+        let mut dest_matrix: Self = Matrix::identity();
+        let mut index_x = 0;
+        let mut last_pivot:K = K::unity();
 
-
-        let mut pivot:K = K::unity();
-
-        for index_x in 0..X {
-            let mut index_other = index_x + 1;
-            while index_other < X && copy[index_x][index_x] == K::default() {
-                let mut tmp: Vector<K, X> = copy[index_x];
-                copy[index_x] = copy[index_other];
-                tmp.iter_mut().for_each(|x| *x -= *x - *x - *x);
-                copy[index_other] = tmp;
-
-                let mut tmp: Vector<K, X> = dest_matrix[index_x];
-                dest_matrix[index_x] = dest_matrix[index_other];
-                tmp.iter_mut().for_each(|x| *x -= *x - *x - *x);
-                dest_matrix[index_other] = tmp;
-                index_other += 1;
-            }
-
-            let vector: Vector<K, X> = copy[index_x].clone();
-            let vector_i: Vector<K, X> = dest_matrix[index_x].clone();
-            for index_other in 0..X {
-                if index_other == index_x {
-                    continue ;
+        while index_x < X {
+            if self[index_x][index_x] == K::default() {
+                for index in index_x..X {
+                    if self[index][index_x] != K::default() {
+                        self.swap_line(index, index_x);
+                        dest_matrix.swap_line(index, index_x);
+                        break ;
+                    }
                 }
-                copy[index_other].nulify_index_inv(index_x, &vector, pivot, &mut dest_matrix[index_other], &vector_i);
             }
-            pivot = copy[index_x][index_x].clone();
-            println!("{pivot:?}");
-            println!("{dest_matrix:?}");
+            if self[index_x][index_x] == K::default() {
+                todo!();
+            }
+            self.gaussian_pivot_elimination_inv(index_x, index_x, last_pivot, &mut dest_matrix);
+            last_pivot = self[index_x][index_x];
+            index_x += 1;
         }
-
-        // divide to make pivot 1
-        //
-        // substract line to all others
-        dest_matrix = dest_matrix / pivot;
-
-
+        dest_matrix = dest_matrix / last_pivot;
         Ok(dest_matrix)
-    }
-
-
-
-    pub fn identity() -> Self {
-        (0..X).map(
-            |x|
-            (0..X).map(
-                |y| if x == y { K::unity() } else { K::default() }
-            ).collect())
-        .collect()
     }
 }
 
+
 #[cfg(test)]
 mod test {
-    use crate::matrix::Matrix;
+    use crate::{fractional::Fraction, matrix::Matrix};
 
     #[test]
     fn test_identity() {
@@ -89,18 +61,43 @@ mod test {
         ].into();
         let inv = ida.inverse();
         println!("{inv:?}");
+        assert!(false);
     }
 
     #[test]
     fn test_inverse_of_id_is_id() {
         let id = Matrix::<i32, 1, 1>::identity();
-        let ida : Matrix::<i32, 1, 1> = id.inverse().unwrap();
+        let ida : Matrix::<i32, 1, 1> = id.clone().inverse().unwrap();
         assert_eq!(id, ida);
         let id = Matrix::<i32, 2, 2>::identity();
-        let ida : Matrix::<i32, 2, 2> = id.inverse().unwrap();
+        let ida : Matrix::<i32, 2, 2> = id.clone().inverse().unwrap();
         assert_eq!(id, ida);
         let id = Matrix::<i32, 3, 3>::identity();
-        let ida : Matrix::<i32, 3, 3> = id.inverse().unwrap();
+        let ida : Matrix::<i32, 3, 3> = id.clone().inverse().unwrap();
         assert_eq!(id, ida);
     }
+
+    #[test]
+    fn test_inverse_fractional() {
+        let first_one : Matrix::<Fraction<i32>, 2, 2> = [
+            [Fraction::from(1), Fraction::from(2)].into(),
+            [Fraction::from(2), Fraction::from(1)].into(),
+        ].into();
+        println!("{:?}", first_one);
+        if let Ok(calculated_inv) = first_one.inverse() {
+            let hard_code : Matrix::<Fraction<i32>, 2, 2> = [
+                [(-1, 3).into(), (2, 3).into()].into(),
+                [(2, 3).into(), (-1, 3).into()].into(),
+            ].into();
+
+            assert_eq!(calculated_inv, hard_code);
+            println!("{:?}", calculated_inv);
+            assert!(false);
+            return
+        } else {
+            assert!(false)
+        }
+
+    }
+
 }

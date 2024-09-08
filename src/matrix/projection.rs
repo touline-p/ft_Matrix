@@ -1,57 +1,30 @@
-use std::ops::IndexMut;
-
-use super::Vector;
-use crate::traits::Field;
-
 use super::Matrix;
 
-fn projection(fov: f32, ratio: f32, near: f32, far: f32) -> Matrix<f32, 4, 4> {
-    Matrix::identity()
+pub fn projection(fov: f32, ratio: f32, near: f32, far: f32) -> Matrix<f32, 4, 4> {
+    let range = near - far;
+    let fov = fov * std::f32::consts::PI / 180.0;
+    let half_fov = fov / 2.;
+    let tan_half_fov = half_fov.tan();
+    let d = 1. / tan_half_fov;
+    let a = (-far - near) / range;
+    let b = 2. * far * near / range;
+    [
+        [d/ratio, 0., 0., 0.].into(),
+        [0.     , d,  0., 0.].into(),
+        [0.     , 0., a , b ].into(),
+        [0.     , 0., 1., 0.].into(),
+    ].into()
 }
-
-impl<K> Matrix<K, 3, 3>
-        where K: Field + PartialEq,
-            Vector<K, 3>: IndexMut<usize> {
-    pub fn extend(self) -> Matrix<K, 4, 4> {
-        let mut dest = Matrix::<K, 4, 4>::identity();
-        self.into_iter()
-        .zip(dest.iter_mut())
-        .for_each(
-            |(row_src, row_dst)|
-            row_src.into_iter()
-            .zip(row_dst.iter_mut())
-            .for_each(
-                |(src, dst)|
-                *dst = src
-            )
-        );
-        dest
-    }
-}
-
-impl
-
 
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
-    fn new_default() {
-        let m: Matrix<i32, 3, 3> = [
-            [1, 0, 2].into(),
-            [2, 3, 4].into(),
-            [2, 3, 4].into(),
-        ].into();
-        let extended = m.extend();
-        let cmp: Matrix<i32, 4, 4> = [
-            [1, 0, 2, 0].into(),
-            [2, 3, 4, 0].into(),
-            [2, 3, 4, 0].into(),
-            [0, 0, 0, 1].into(),
-        ].into();
-        assert_eq!(cmp, extended);
-
+    fn test_projection() {
+        let mut projection_matrix = projection(45., 16. / 9., 2., 50.);
+        projection_matrix.transpose();
+        println!("{projection_matrix:?}");
     }
 
 }

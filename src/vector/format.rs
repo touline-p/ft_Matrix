@@ -5,7 +5,7 @@ impl<K: Display + Field, const SIZE: usize> fmt::Display for Vector<K, SIZE> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "[")?;
         for contained in self {
-            write!(f, "{}/", contained)?;
+            write!(f, "{}, ", contained)?;
         }
         write!(f, "]\n")
     }
@@ -13,10 +13,10 @@ impl<K: Display + Field, const SIZE: usize> fmt::Display for Vector<K, SIZE> {
 
 impl<K: Debug, const SIZE: usize> fmt::Debug for Vector<K, SIZE> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[")?;
+        write!(f, "")?;
         for contained in self {
-            write!(f, "{:?}/", contained)?;
+            write!(f, "{:?}, ", contained)?;
         }
-        write!(f, "]\n")
+        write!(f, "\n")
     }
 }

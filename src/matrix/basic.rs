@@ -18,12 +18,23 @@ impl<K, const X: usize, const Y: usize> Matrix<K, X, Y>
     pub fn is_square() -> bool {
         X == Y
     }
+
+    pub fn identity() -> Self {
+        (0..X).map(
+            |x|
+            (0..X).map(
+                |y| if x == y { K::unity() } else { K::default() }
+            ).collect())
+        .collect()
+    }
 }
 
 impl<K: Field, const X: usize, const Y: usize> From<[Vector<K, X>; Y]> for Matrix<K, X, Y> {
     fn from(rows: [Vector<K, X>; Y]) -> Self {
         Matrix { rows }
     }
+
+
 }
 
 impl<K: Field + Copy, const X: usize, const Y: usize> Default for Matrix<K, X, Y> {
@@ -51,17 +62,6 @@ impl<K: Field, const SQUARE_DIM: usize> Matrix<K, SQUARE_DIM, SQUARE_DIM> {
     }
 }
 
-impl<K: Field, const X: usize, const Y: usize> Matrix<K, X, Y> {
-    pub fn transpose(&mut self) -> Matrix<K, Y, X> {
-        (0..X).map(
-            |index_x|
-            (0..Y).map(
-                |index_y|
-                self[index_y][index_x]).collect::<Vector<K, Y>>()
-        ).collect()
-
-    }
-}
 
 impl<K: Field, const SQUARE_DIM: usize> Matrix<K, SQUARE_DIM, SQUARE_DIM>
     where K: Field + PartialEq + Debug {
@@ -73,41 +73,6 @@ impl<K: Field, const SQUARE_DIM: usize> Matrix<K, SQUARE_DIM, SQUARE_DIM>
     }
 }
 
-
-impl<K, const X: usize, const Y: usize> Matrix<K, X, Y>
-    where K: Field + PartialEq {
-    pub fn to_row_echelon_form(&mut self) -> usize {
-        let mut pivot: K = K::unity();
-        let mut inv_rank: usize = 0;
-        let mut index_x = 0;
-        while index_x + inv_rank < X {
-            let mut index_other = index_x + 1;
-            while index_other < X && self[index_x][index_x + inv_rank] == K::default() {
-                let mut tmp: Vector<K, X> = self[index_x];
-                self[index_x] = self[index_other];
-                tmp.iter_mut().for_each(|x| *x = *x - *x - *x);
-                self[index_other] = tmp;
-                index_other += 1;
-            }
-            while inv_rank + index_x < X && self[index_x][index_x + inv_rank] == K::default() {
-                inv_rank += 1;
-            }
-            if index_x + inv_rank == X {
-                break ;
-            }
-            let vector: Vector<K, X> = self[index_x + inv_rank].clone();
-            for index_other in 0..Y {
-                if index_other == index_x {
-                    continue ;
-                }
-                self[index_other].nulify_index(index_x + inv_rank, &vector, pivot);
-            }
-            pivot = self[index_x][index_x + inv_rank].clone();
-            index_x += 1;
-        }
-        X - inv_rank
-    }
-}
 
 impl<K: Debug, const X: usize, const Y: usize> fmt::Debug for Matrix<K, X, Y> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -124,7 +89,7 @@ mod test {
     use super::*;
     #[test]
     fn determinant_test() {
-        let mut a: Matrix<f64, 2, 2> = [
+        let a: Matrix<f64, 2, 2> = [
             [1., 2.].into(),
             [3., 4.].into(),
         ].into();

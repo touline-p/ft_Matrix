@@ -4,7 +4,9 @@ use crate::traits::Field;
 pub mod basic;
 pub mod ops;
 pub mod iterator;
+pub mod row_echelon_form;
 pub mod inverse;
+pub mod transpose;
 pub mod rank;
 pub mod projection;
 

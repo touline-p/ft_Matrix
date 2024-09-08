@@ -1,6 +1,8 @@
-use std::ops::{Add, AddAssign, Sub, SubAssign, Div, DivAssign, Mul, MulAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, Sub, SubAssign};
 
-use std::fmt::Debug;
+pub trait FractionField:
+    Field + Ord + Rem<Output = Self> + Neg<Output = Self>
+{}
 
 #[rustfmt::skip]
 pub trait Field:
@@ -10,7 +12,7 @@ pub trait Field:
         + Mul<Output = Self> + MulAssign
         + Div<Output = Self> + DivAssign
         + Unity
-        + Debug
+        + Neg<Output = Self>
 {
 }
 
@@ -27,7 +29,14 @@ macro_rules! impl_unity {
         })*
     };
 }
+impl_unity!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
 
+macro_rules! impl_fraction_field {
+    ($($type:ident),*) => {
+        $(impl FractionField for $type {})*
+    };
+}
+impl_fraction_field!(i8, i16, i32, i64);
 
 
 macro_rules! impl_field {
@@ -35,6 +44,7 @@ macro_rules! impl_field {
         $(impl Field for $type {})*
     };
 }
+impl_field!(i8, i16, i32, i64, f32, f64);
 
 macro_rules! impl_abs_unchanged {
     ($($type:ident),*) => {
@@ -45,6 +55,7 @@ macro_rules! impl_abs_unchanged {
         })*
     };
 }
+impl_abs_unchanged!(u8, u16, u32, u64);
 
 macro_rules! impl_abs {
     ($($type:ident),*) => {
@@ -59,11 +70,8 @@ macro_rules! impl_abs {
         })*
     };
 }
-
-impl_field!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
-impl_unity!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
 impl_abs!(i8, i16, i32, i64, f32, f64);
-impl_abs_unchanged!(u8, u16, u32, u64);
+
 
 pub trait Abs: PartialOrd + Default {
     fn abs(self) -> Self;

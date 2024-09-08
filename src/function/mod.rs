@@ -1,6 +1,6 @@
 use core::f32;
 use crate::vector::Vector;
-use std::ops::Mul;
+use std::ops::{Mul, Rem};
 
 use super::Field;
 
@@ -31,6 +31,19 @@ pub fn linear_combination<K: Field, const SIZE: usize, const NB_OF_VEC: usize>(
         return_value.add_scl_assign(vector, coef);
     }
     return_value
+}
+
+pub fn pgcd<K: Default + Rem<Output = K> + PartialEq + Clone>(mut a: K, mut b: K) -> K {
+    loop {
+        if b == K::default() {
+            return a;
+        }
+        b = a.clone() % b;
+        if a == K::default() {
+            return b;
+        }
+        a = b.clone() % a;
+    }
 }
 
 #[cfg(test)]
